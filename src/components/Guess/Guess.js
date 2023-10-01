@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Guess( {newGuess} ) {
+function Guess( {newGuess, allow} ) {
   const [input, setInput] = React.useState('')
   return <form className="guess-input-wrapper"
     onSubmit={ (ev)=> {
@@ -11,7 +11,7 @@ function Guess( {newGuess} ) {
     }
   >
     <label htmlFor="guess-input">Enter guess: (exactly 5 letters)</label>
-    <input id="guess-input" type="text"
+    <input id="guess-input" type="text" disabled={!allow}
       pattern="([a-z]|[A-Z]){5}"
       value={input}
       onChange={(ev) => {

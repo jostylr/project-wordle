@@ -4,6 +4,8 @@ import { sample } from '../../utils';
 import { WORDS } from '../../data';
 import Guess from '../Guess';
 import PastGuesses from '../PastGuesses'
+import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
+
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -15,6 +17,8 @@ function Game() {
   const [pastGuesses, setPastGuesses] = React.useState([]);
 
   const newGuess = (guess) => {
+    const clone = [...pastGuesses];
+    
     setPastGuesses( [...pastGuesses, {guess, id:Math.random()}]);
     setGuess(guess);
   }
@@ -23,10 +27,12 @@ function Game() {
     <PastGuesses 
       guesses={pastGuesses}
     />
-    <Guess newGuess={newGuess}/>
+    <Guess newGuess={newGuess} allow={NUM_OF_GUESSES_ALLOWED > (pastGuesses.length)} />
     {guess && ((guess === answer) ? 
-      <h2>You Won with {guess}!</h2> : 
-      <h2>Incorrect Guess: {guess}</h2>) }
+      <h2>You Won with {guess}!</h2> :
+      (pastGuesses.length >= 6) && <h2>You lost. Sorry! The word was {answer}</h2>
+      ) 
+    }
   </>;
 }
 
