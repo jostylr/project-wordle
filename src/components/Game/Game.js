@@ -5,7 +5,7 @@ import { WORDS } from '../../data';
 import Guess from '../Guess';
 import PastGuesses from '../PastGuesses'
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
-
+import {checkGuess} from '../../game-helpers';
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -18,8 +18,8 @@ function Game() {
 
   const newGuess = (guess) => {
     const clone = [...pastGuesses];
-    
-    setPastGuesses( [...pastGuesses, {guess, id:Math.random()}]);
+    const parsed = checkGuess(guess, answer);
+    setPastGuesses( [...pastGuesses, {guess:parsed, id:Math.random()}]);
     setGuess(guess);
   }
 

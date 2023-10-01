@@ -2,7 +2,7 @@ import React from 'react';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 
 const blanks = Array(NUM_OF_GUESSES_ALLOWED).fill('').map( (el, ind) => (
-  {guess: '     ', id:ind} 
+  {guess: '     ', id:ind, blank:true} 
 ))
 
 console.log(blanks);
@@ -15,12 +15,17 @@ function PastGuesses({guesses}) {
   console.log(rows);
 
   return <div className="guess-results">
-    {rows.map( ({guess, id}) => (
+    {rows.map( ({guess, id, blank=false}) => (
       <p className="guess" key={id}>
-        {guess.split('').map( (letter, ind) => (
+        {blank ? 
+        guess.split('').map( (letter, ind) => (
             <span className="cell" key={ind}>{letter}</span>
-        ))}
-        </p>
+        ))
+        : guess.map( ({letter, status}, ind ) => (
+          <span className={"cell " + status} key={ind} >{letter}</span>
+        ))
+       }  
+      </p>
     ))}
 
   </div>;
