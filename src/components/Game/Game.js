@@ -3,7 +3,8 @@ import React from 'react';
 import { sample } from '../../utils';
 import { WORDS } from '../../data';
 import Guess from '../Guess';
-import PastGuesses from '../PastGuesses'
+import PastGuesses from '../PastGuesses';
+import Banner from '../Banner';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 import {checkGuess} from '../../game-helpers';
 
@@ -15,24 +16,22 @@ console.info({ answer });
 function Game() {
   const [guess, setGuess] = React.useState('');
   const [pastGuesses, setPastGuesses] = React.useState([]);
+  const [end, setEnd] = React.useState(0);
 
   const newGuess = (guess) => {
-    const clone = [...pastGuesses];
     const parsed = checkGuess(guess, answer);
-    setPastGuesses( [...pastGuesses, {guess:parsed, id:Math.random()}]);
+    const clone = [...pastGuesses, {guess:parsed, id:Math.random()}];
+    setPastGuesses( clone);
     setGuess(guess);
+    setEnd( (guess === answer) ? 1 : ( clone.length < NUM_OF_GUESSES_ALLOWED) ? 0 : -1);
   }
 
   return <>
     <PastGuesses 
       guesses={pastGuesses}
     />
-    <Guess newGuess={newGuess} allow={NUM_OF_GUESSES_ALLOWED > (pastGuesses.length)} />
-    {guess && ((guess === answer) ? 
-      <h2>You Won with {guess}!</h2> :
-      (pastGuesses.length >= 6) && <h2>You lost. Sorry! The word was {answer}</h2>
-      ) 
-    }
+    <Guess newGuess={newGuess} allow={end===0} />
+    <Banner status={end} guesses={pastGuesses.length} answer={answer} />
   </>;
 }
 
